@@ -21,5 +21,5 @@ declare module '@bosio/mongodriver' {
         public Replace(query: object, nuovo: object, upsert?: boolean): Promise<object>;
     }
 
-    export default MongoDriver;
+    export = MongoDriver;
 }
