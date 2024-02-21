@@ -1,0 +1,22 @@
+{
+  "name": "@bosio/mongodriver",
+  "version": "1.0.3",
+  "description": "Libreria per facilitare l'uso di MongoDB su Node",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BosioPietro/MongoDriver.git"
+  },
+  "author": "bosio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BosioPietro/MongoDriver/issues"
+  },
+  "homepage": "https://github.com/BosioPietro/MongoDriver#readme",
+  "dependencies": {
+    "mongodb": "^6.3.0"
+  }
+}
