@@ -63,7 +63,7 @@ class MongoDriver{
         {
             this.collezione = collezione;
         }
-        else throw new Error("La collezione " + collezione + " non esiste");
+        else throw new Error("La collezione \"" + collezione + "\" non esiste");
     }
 
     /**
@@ -106,7 +106,7 @@ class MongoDriver{
         {
             this.database = nomeDatabase;
         }
-        else throw new Error("Il database " + nomeDatabase + " non esiste");
+        else throw new Error("Il database \"" + nomeDatabase + "\" non esiste");
     } 
 
     /**
