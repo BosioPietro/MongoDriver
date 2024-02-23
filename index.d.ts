@@ -166,4 +166,4 @@ declare class MongoDriver {
     private Client;
     private Prompt;
 }
-export = MongoDriver;
+export default MongoDriver;
