@@ -8,7 +8,7 @@ import {Collection, MongoClient, ObjectId} from "mongodb";
 class MongoDriver{
     private constructor(strConn : string){
         this.strConn = strConn;
-        this.Prompt(`Driver creato con stringa di connessione ${strConn}`)
+        this.Prompt("Driver creato con stringa di connessione " + strConn)
     }
     /**
      * @description Crea un oggetto ID data una string
@@ -34,7 +34,7 @@ class MongoDriver{
         await database.SettaDatabase(nomeDatabase);
         if(collezione) await database.SettaCollezione(collezione);
 
-        database.Prompt(`Database ${database.database} e collezione ${database.collezione} impostati`)
+        database.Prompt("Database " + database.database + " e collezione " + database.collezione + "impostati")
         return database;
     }
 
@@ -63,7 +63,7 @@ class MongoDriver{
         {
             this.collezione = collezione;
         }
-        else throw new Error(`La collezione ${collezione} non esiste`);
+        else throw new Error("La collezione " + collezione + "non esiste");
     }
 
     /**
@@ -83,7 +83,7 @@ class MongoDriver{
 
             return {"collezioni" : collezioni.map(c => c.name)};
         }
-        catch(err){ return {"errore" : `${err}`} }
+        catch(err){ return { "errore" : err as string } }
     }
 
     /**
@@ -106,7 +106,7 @@ class MongoDriver{
         {
             this.database = nomeDatabase;
         }
-        else throw new Error(`Il database ${nomeDatabase} non esiste`);
+        else throw new Error("Il database" + nomeDatabase + "non esiste");
     } 
 
     /**
@@ -280,8 +280,8 @@ class MongoDriver{
         }
         catch(err)
         {
-            this.Prompt(`Errore esecuzione query: ${err}`);
-            return { "errore" : `${err}` };
+            this.Prompt("Errore esecuzione query: " + err as string);
+            return { "errore" : err as string };
         }
         finally { client.close() }
     }

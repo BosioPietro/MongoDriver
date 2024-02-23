@@ -57,7 +57,7 @@ var MongoDriver = /** @class */ (function () {
         this.database = "";
         this.collezione = "";
         this.strConn = strConn;
-        this.Prompt("Driver creato con stringa di connessione ".concat(strConn));
+        this.Prompt("Driver creato con stringa di connessione " + strConn);
     }
     /**
      * @description Crea un oggetto ID data una string
@@ -94,7 +94,7 @@ var MongoDriver = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        database.Prompt("Database ".concat(database.database, " e collezione ").concat(database.collezione, " impostati"));
+                        database.Prompt("Database " + database.database + " e collezione " + database.collezione + "impostati");
                         return [2 /*return*/, database];
                 }
             });
@@ -131,7 +131,7 @@ var MongoDriver = /** @class */ (function () {
                             this.collezione = collezione;
                         }
                         else
-                            throw new Error("La collezione ".concat(collezione, " non esiste"));
+                            throw new Error("La collezione " + collezione + "non esiste");
                         return [2 /*return*/];
                 }
             });
@@ -160,7 +160,7 @@ var MongoDriver = /** @class */ (function () {
                         return [2 /*return*/, { "collezioni": collezioni.map(function (c) { return c.name; }) }];
                     case 3:
                         err_1 = _a.sent();
-                        return [2 /*return*/, { "errore": "".concat(err_1) }];
+                        return [2 /*return*/, { "errore": err_1 }];
                     case 4: return [2 /*return*/];
                 }
             });
@@ -196,7 +196,7 @@ var MongoDriver = /** @class */ (function () {
                             this.database = nomeDatabase;
                         }
                         else
-                            throw new Error("Il database ".concat(nomeDatabase, " non esiste"));
+                            throw new Error("Il database" + nomeDatabase + "non esiste");
                         return [2 /*return*/];
                 }
             });
@@ -478,8 +478,8 @@ var MongoDriver = /** @class */ (function () {
                         return [2 /*return*/, data];
                     case 2:
                         err_2 = _a.sent();
-                        this.Prompt("Errore esecuzione query: ".concat(err_2));
-                        return [2 /*return*/, { "errore": "".concat(err_2) }];
+                        this.Prompt("Errore esecuzione query: " + err_2);
+                        return [2 /*return*/, { "errore": err_2 }];
                     case 3:
                         client.close();
                         return [7 /*endfinally*/];
