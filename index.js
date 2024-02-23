@@ -45,6 +45,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MongoDriver = void 0;
 var mongodb_1 = require("mongodb");
 /**
  * @description Driver per MongoDB
@@ -525,4 +526,4 @@ var MongoDriver = /** @class */ (function () {
     };
     return MongoDriver;
 }());
-exports.default = MongoDriver;
+exports.MongoDriver = MongoDriver;
