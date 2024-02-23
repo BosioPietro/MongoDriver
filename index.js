@@ -94,7 +94,7 @@ var MongoDriver = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        database.Prompt("Database " + database.database + " e collezione " + database.collezione + "impostati");
+                        database.Prompt("Database " + database.database + " e collezione " + database.collezione + " impostati");
                         return [2 /*return*/, database];
                 }
             });
@@ -131,7 +131,7 @@ var MongoDriver = /** @class */ (function () {
                             this.collezione = collezione;
                         }
                         else
-                            throw new Error("La collezione " + collezione + "non esiste");
+                            throw new Error("La collezione " + collezione + " non esiste");
                         return [2 /*return*/];
                 }
             });
@@ -196,7 +196,7 @@ var MongoDriver = /** @class */ (function () {
                             this.database = nomeDatabase;
                         }
                         else
-                            throw new Error("Il database" + nomeDatabase + "non esiste");
+                            throw new Error("Il database " + nomeDatabase + " non esiste");
                         return [2 /*return*/];
                 }
             });
