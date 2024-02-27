@@ -1,4 +1,41 @@
-import {Collection, MongoClient, ObjectId} from "mongodb";
+import {Collection, MongoClient, ObjectId } from "mongodb";
+
+
+type Errore = {
+    errore: string
+}
+
+interface IProjection extends Record<string, any> {
+    _id: ObjectId;
+}
+
+type Insert = {
+    acknowledged: boolean,
+    insertedId: ObjectId | number
+}
+
+type Update = {
+    acknowledged: boolean,
+    modifiedCount: number,
+    matchedCount: number,
+    upsertedCount?: number,
+    upsertedId?: ObjectId | number
+}
+
+type Replace = {
+    acknowledged: boolean,
+    modifiedCount: number,
+    matchedCount: number,
+    upsertedCount?: number,
+    upsertedId?: ObjectId | number
+}
+
+type Delete = {
+    acknowledged: boolean,
+    deletedCount: number
+
+}
+
 
 /**
  * @description Driver per MongoDB
@@ -114,6 +151,7 @@ class MongoDriver{
      * @returns {string} Stringa di connessione
      */
     get StrConn() : string { return this.strConn }
+    
 
     /**
      * @description Restituisce tutti i risultati della query
@@ -123,10 +161,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async PrendiMolti(query: object = {}, projection:object = {}, sort:{sort : any, direction? : number} = {sort: {}}) : Promise<object> {
+    public async PrendiMolti<T extends IProjection = any>(query: object = {}, projection: T = {} as T, sort: {sort : any, direction? : number} = {sort: {}}) : Promise<T | Errore> {
         const {client, collection} = await this.Connetti();
-
-        return this.EseguiQuery(async () => collection.find(query).project(projection).sort(Object.values(sort)).toArray(), client)
+    
+        return this.EseguiQuery<T>(async () => collection.find(query).project(projection).sort(Object.values(sort)).toArray(), client);
     }
 
     /**
@@ -136,10 +174,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async PrendiUno(query: object = {}, projection : object = {}) : Promise<object> {
+    public async PrendiUno<T extends IProjection = any>(query: object = {}, projection: T = {} as T) : Promise<T | Errore> {
         const {client, collection} = await this.Connetti();
-
-        return this.EseguiQuery(async () => collection.findOne(query, { projection }), client)
+    
+        return this.EseguiQuery<T>(async () => collection.findOne(query, { projection }), client);
     }
 
     /**
@@ -159,11 +197,11 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async Inserisci(...oggetti: object[]) : Promise<object> {
+    public async Inserisci(...oggetti: object[]) : Promise< Insert | Errore > {
         const {client, collection} = await this.Connetti();
         const rq = oggetti.length == 1 ? collection.insertOne(oggetti[0]) : collection.insertMany(oggetti);
 
-        return this.EseguiQuery(() => rq, client);
+        return this.EseguiQuery<Insert>(() => rq, client);
     }
 
     /** 
@@ -174,10 +212,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async UpdateUno(filtro : object, update : object, upsert : boolean = false) : Promise<object> {
+    public async UpdateUno(filtro : object, update : object, upsert : boolean = false) : Promise<Update | Errore> {
         const {client, collection} = await this.Connetti(); 
 
-        return this.EseguiQuery(() => collection.updateOne(filtro, update, { upsert }), client);
+        return this.EseguiQuery<Update>(() => collection.updateOne(filtro, update, { upsert }), client);
     }
 
      /**
@@ -188,10 +226,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async UpdateMolti(filtro : object, update : object, upsert : boolean = false) : Promise<object> {
+    public async UpdateMolti(filtro : object, update : object, upsert : boolean = false) : Promise<Update | Errore> {
         const {client, collection} = await this.Connetti(); 
 
-        return this.EseguiQuery(() => collection.updateMany(filtro, update, { upsert }), client);
+        return this.EseguiQuery<Update>(() => collection.updateMany(filtro, update, { upsert }), client);
     }
 
     /**
@@ -202,10 +240,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async SostituisciUno(filtro: object, oggetto: object, upsert: boolean = false) : Promise<object> {
+    public async SostituisciUno(filtro: object, oggetto: object, upsert: boolean = false) : Promise<Replace | Errore> {
         const {client, collection} = await this.Connetti(); 
 
-        return this.EseguiQuery(() => collection.replaceOne(filtro, oggetto, { upsert }), client);
+        return this.EseguiQuery<Replace>(() => collection.replaceOne(filtro, oggetto, { upsert }), client);
     }
 
     /**
@@ -214,10 +252,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async EliminaUno(query : object) : Promise<object> {
+    public async EliminaUno(query : object) : Promise<Delete | Errore> {
         const {client, collection} = await this.Connetti(); 
 
-        return this.EseguiQuery(() => collection.deleteOne(query), client);
+        return this.EseguiQuery<Delete>(() => collection.deleteOne(query), client);
     }
 
     /**
@@ -226,10 +264,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async Elimina(query : object) : Promise<object> {
+    public async Elimina(query : object) : Promise< Delete | Errore> {
         const {client, collection} = await this.Connetti(); 
 
-        return this.EseguiQuery(() => collection.deleteMany(query), client);
+        return this.EseguiQuery<Delete>(() => collection.deleteMany(query), client);
     }
 
     /**
@@ -238,10 +276,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async NumeroRecord(query : object = {}) : Promise<object> {
+    public async NumeroRecord(query : object = {}) : Promise<number | Errore> {
         const {client, collection} = await this.Connetti(); 
 
-        return this.EseguiQuery(() => collection.countDocuments(query), client);
+        return this.EseguiQuery<number>(() => collection.countDocuments(query), client);
     }
 
     /**
@@ -265,13 +303,13 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async Replace(query : object, nuovo : object, upsert : boolean = false) : Promise<object> {
+    public async Replace(query : object, nuovo : object, upsert : boolean = false) : Promise<Replace | Errore> {
         const {client, collection} = await this.Connetti(); 
 
-        return this.EseguiQuery(() => collection.replaceOne(query, nuovo, { upsert }), client);
+        return this.EseguiQuery<Replace>(() => collection.replaceOne(query, nuovo, { upsert }), client);
     }
     
-    private async EseguiQuery(funzione_query : Function, client : MongoClient) : Promise<object>{
+    private async EseguiQuery<T = object>(funzione_query : Function, client : MongoClient) : Promise<T | Errore>{
         try
         {
             const data = await funzione_query();
