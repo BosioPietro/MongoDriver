@@ -161,11 +161,11 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async PrendiMolti<T extends IProjection = any>(query: object = {}, projection: T = {} as T, sort: {sort : any, direction? : number} = {sort: {}}) : Promise<T | Errore> {
+    public async PrendiMolti<T = any>(query: object = {}, projection: T = {} as T, sort: {sort : any, direction? : number} = {sort: {}}) : Promise<IProjection & T | Errore> {        
         const {client, collection} = await this.Connetti();
     
-        return this.EseguiQuery<T>(async () => collection.find(query).project(projection).sort(Object.values(sort)).toArray(), client);
-    }
+        return this.EseguiQuery<IProjection & T>(async () => collection.find(query).project(projection as any).sort(Object.values(sort)).toArray(), client);
+    } 
 
     /**
      * @description Restituisce il primo risultato della query
@@ -174,10 +174,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async PrendiUno<T extends IProjection = any>(query: object = {}, projection: T = {} as T) : Promise<T | Errore> {
+    public async PrendiUno<T = any>(query: object = {}, projection: T = {} as T) : Promise<IProjection & T | Errore> {
         const {client, collection} = await this.Connetti();
     
-        return this.EseguiQuery<T>(async () => collection.findOne(query, { projection }), client);
+        return this.EseguiQuery<IProjection & T>(async () => collection.findOne(query, { projection : projection as any }), client);
     }
 
     /**

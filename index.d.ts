@@ -97,10 +97,10 @@ declare class MongoDriver {
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    PrendiMolti<T extends IProjection = any>(query?: object, projection?: T, sort?: {
+    PrendiMolti<T = any>(query?: object, projection?: T, sort?: {
         sort: any;
         direction?: number;
-    }): Promise<T | Errore>;
+    }): Promise<IProjection & T | Errore>;
     /**
      * @description Restituisce il primo risultato della query
      * @param {object} query Query da eseguire
@@ -108,7 +108,7 @@ declare class MongoDriver {
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    PrendiUno<T extends IProjection = any>(query?: object, projection?: T): Promise<T | Errore>;
+    PrendiUno<T = any>(query?: object, projection?: T): Promise<IProjection & T | Errore>;
     /**
      * @description Restituisce la corrispondenza con l'ID specificato
      * @param {string} id ID del record
