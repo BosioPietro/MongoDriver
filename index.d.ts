@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-type Errore = {
+export type Errore = {
     errore: string;
 };
 type Anyify<T> = {
@@ -196,5 +196,6 @@ declare class MongoDriver {
     private Connetti;
     private Client;
     private Prompt;
+    ChkErrore<T = any>(record: Errore | T): record is Errore;
 }
 export { MongoDriver };

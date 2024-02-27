@@ -1,7 +1,7 @@
 import {Collection, MongoClient, ObjectId } from "mongodb";
 
 
-type Errore = {
+export type Errore = {
     errore: string
 }
 
@@ -340,6 +340,10 @@ class MongoDriver{
 
     private Prompt(...elementi : any[]) : void {
         console.log(">>> ", ...elementi);
+    }
+
+    public ChkErrore<T = any>(record : Errore | T) : record is Errore {
+        return (record as Errore).errore !== undefined;
     }
 }
 
