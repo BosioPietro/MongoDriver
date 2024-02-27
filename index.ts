@@ -5,7 +5,9 @@ type Errore = {
     errore: string
 }
 
-interface IProjection extends Record<string, any> {
+type Anyify<T> = { [P in keyof T]: any };
+
+interface Projection extends Record<string, any> {
     _id: ObjectId;
 }
 
@@ -161,10 +163,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async PrendiMolti<T = any>(query: object = {}, projection: T = {} as T, sort: {sort : any, direction? : number} = {sort: {}}) : Promise<IProjection & T | Errore> {        
+    public async PrendiMolti<T extends Record<string, any> = Record<string, any>>(query: object = {}, projection: T = {} as T, sort: {sort : any, direction? : number} = {sort: {}}) : Promise<Projection & Anyify<T> | Errore> {        
         const {client, collection} = await this.Connetti();
     
-        return this.EseguiQuery<IProjection & T>(async () => collection.find(query).project(projection as any).sort(Object.values(sort)).toArray(), client);
+        return this.EseguiQuery<Projection & T>(async () => collection.find(query).project(projection as any).sort(Object.values(sort)).toArray(), client);
     } 
 
     /**
@@ -174,10 +176,10 @@ class MongoDriver{
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    public async PrendiUno<T = any>(query: object = {}, projection: T = {} as T) : Promise<IProjection & T | Errore> {
+    public async PrendiUno<T extends Record<string, any> = Record<string, any>>(query: object = {}, projection: T = {} as T) : Promise<Projection & Anyify<T> | Errore> {
         const {client, collection} = await this.Connetti();
     
-        return this.EseguiQuery<IProjection & T>(async () => collection.findOne(query, { projection : projection as any }), client);
+        return this.EseguiQuery<Projection & T>(async () => collection.findOne(query, { projection : projection as any }), client);
     }
 
     /**
