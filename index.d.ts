@@ -2,7 +2,10 @@ import { ObjectId } from "mongodb";
 type Errore = {
     errore: string;
 };
-interface IProjection extends Record<string, any> {
+type Anyify<T> = {
+    [P in keyof T]: any;
+};
+interface Projection extends Record<string, any> {
     _id: ObjectId;
 }
 type Insert = {
@@ -97,10 +100,10 @@ declare class MongoDriver {
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    PrendiMolti<T = any>(query?: object, projection?: T, sort?: {
+    PrendiMolti<T extends Record<string, any> = Record<string, any>>(query?: object, projection?: T, sort?: {
         sort: any;
         direction?: number;
-    }): Promise<IProjection & T | Errore>;
+    }): Promise<Projection & Anyify<T> | Errore>;
     /**
      * @description Restituisce il primo risultato della query
      * @param {object} query Query da eseguire
@@ -108,7 +111,7 @@ declare class MongoDriver {
      * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
-    PrendiUno<T = any>(query?: object, projection?: T): Promise<IProjection & T | Errore>;
+    PrendiUno<T extends Record<string, any> = Record<string, any>>(query?: object, projection?: T): Promise<Projection & Anyify<T> | Errore>;
     /**
      * @description Restituisce la corrispondenza con l'ID specificato
      * @param {string} id ID del record
