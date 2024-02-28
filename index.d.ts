@@ -196,6 +196,12 @@ declare class MongoDriver {
     private Connetti;
     private Client;
     private Prompt;
+
+    /**
+     * @description Controlla se un record è di errore
+     * @param {Errore | T } record Oggetto da controllare 
+     * @returns { record is Errore }
+     */
     ChkErrore<T = any>(record: Errore | T): record is Errore;
 }
 export { MongoDriver };
