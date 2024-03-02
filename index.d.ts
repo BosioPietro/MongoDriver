@@ -97,8 +97,8 @@ declare class MongoDriver {
      * @param {object} query Query da eseguire
      * @param {object} projection Campi da proiettare
      * @param {object} sort Ordinamento -- {sort : nomeCampo, direction : "asc" | "desc"}
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Projection & Anyify<T> | Errore>} Risultato della query
      */
     PrendiMolti<T extends Record<string, any> = Record<string, any>>(query?: object, projection?: T, sort?: {
         sort: any;
@@ -108,14 +108,14 @@ declare class MongoDriver {
      * @description Restituisce il primo risultato della query
      * @param {object} query Query da eseguire
      * @param {object} projection Campi da proiettare
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Projection & Anyify<T> | Errore>} Risultato della query
      */
     PrendiUno<T extends Record<string, any> = Record<string, any>>(query?: object, projection?: T): Promise<Projection & Anyify<T> | Errore>;
     /**
      * @description Restituisce la corrispondenza con l'ID specificato
      * @param {string} id ID del record
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      * @deprecated Usare ID()
      */
@@ -123,8 +123,8 @@ declare class MongoDriver {
     /**
      * @description Restituisce la corrispondenza con l'ID specificato
      * @param {object[]} oggetti Record da inserire
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise< Insert | Errore >} Risultato della query
      */
     Inserisci(...oggetti: object[]): Promise<Insert | Errore>;
     /**
@@ -132,8 +132,8 @@ declare class MongoDriver {
      * @param {object} filtro Filtro per la query
      * @param {object} update Aggiornamento da applicare
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {PPromise<Update | Errore>} Risultato della query
      */
     UpdateUno(filtro: object, update: object, upsert?: boolean): Promise<Update | Errore>;
     /**
@@ -141,8 +141,8 @@ declare class MongoDriver {
     * @param {object} filtro Filtro per la query
     * @param {object} update Aggiornamento da applicare
     * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
-    * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-    * @returns {Promise<object>} Risultato della query
+    * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+    * @returns {Promise<Update | Errore>} Risultato della query
     */
     UpdateMolti(filtro: object, update: object, upsert?: boolean): Promise<Update | Errore>;
     /**
@@ -150,36 +150,36 @@ declare class MongoDriver {
      * @param {object} filtro Filtro per la query
      * @param {object} oggetto Oggetto che rimpiazza il record
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Replace | Errore>} Risultato della query
      */
     SostituisciUno(filtro: object, oggetto: object, upsert?: boolean): Promise<Replace | Errore>;
     /**
      * @description Elimina il primo record che corrisponde al filtro
      * @param {object} query Filtro per la query
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
     EliminaUno(query: object): Promise<Delete | Errore>;
     /**
      * @description Elimina tutti i record che corrispondono al filtro
      * @param {object} query Filtro per la query
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Delete | Errore>} Risultato della query
      */
     Elimina(query: object): Promise<Delete | Errore>;
     /**
      * @description Restituisce il numero di record che corrispondono al filtro
      * @param {object} query Filtro per la query
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<number | Errore>} Risultato della query
      */
     NumeroRecord(query?: object): Promise<number | Errore>;
     /**
      * @description Restituisce i valori distinti di un campo
      * @param {string} record Campo su cui applicare il distinct
      * @param {object} query Filtro per la query
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
     PrendiDistinct(record: string, query?: object): Promise<object>;
@@ -188,18 +188,17 @@ declare class MongoDriver {
      * @param {object} query Filtro per la query
      * @param {string} nuovo Campo che rimpiazza il campo specificato in query
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Replace | Errore>} Risultato della query
      */
     Replace(query: object, nuovo: object, upsert?: boolean): Promise<Replace | Errore>;
     private EseguiQuery;
     private Connetti;
     private Client;
     private Prompt;
-
     /**
      * @description Controlla se un record è di errore
-     * @param {Errore | T } record Oggetto da controllare 
+     * @param {Errore | T } record Oggetto da controllare
      * @returns { record is Errore }
      */
     ChkErrore<T = any>(record: Errore | T): record is Errore;

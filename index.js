@@ -216,8 +216,8 @@ var MongoDriver = /** @class */ (function () {
      * @param {object} query Query da eseguire
      * @param {object} projection Campi da proiettare
      * @param {object} sort Ordinamento -- {sort : nomeCampo, direction : "asc" | "desc"}
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Projection & Anyify<T> | Errore>} Risultato della query
      */
     MongoDriver.prototype.PrendiMolti = function (query, projection, sort) {
         if (query === void 0) { query = {}; }
@@ -242,8 +242,8 @@ var MongoDriver = /** @class */ (function () {
      * @description Restituisce il primo risultato della query
      * @param {object} query Query da eseguire
      * @param {object} projection Campi da proiettare
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Projection & Anyify<T> | Errore>} Risultato della query
      */
     MongoDriver.prototype.PrendiUno = function (query, projection) {
         if (query === void 0) { query = {}; }
@@ -266,7 +266,7 @@ var MongoDriver = /** @class */ (function () {
     /**
      * @description Restituisce la corrispondenza con l'ID specificato
      * @param {string} id ID del record
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      * @deprecated Usare ID()
      */
@@ -276,8 +276,8 @@ var MongoDriver = /** @class */ (function () {
     /**
      * @description Restituisce la corrispondenza con l'ID specificato
      * @param {object[]} oggetti Record da inserire
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise< Insert | Errore >} Risultato della query
      */
     MongoDriver.prototype.Inserisci = function () {
         var oggetti = [];
@@ -302,8 +302,8 @@ var MongoDriver = /** @class */ (function () {
      * @param {object} filtro Filtro per la query
      * @param {object} update Aggiornamento da applicare
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {PPromise<Update | Errore>} Risultato della query
      */
     MongoDriver.prototype.UpdateUno = function (filtro, update, upsert) {
         if (upsert === void 0) { upsert = false; }
@@ -324,8 +324,8 @@ var MongoDriver = /** @class */ (function () {
     * @param {object} filtro Filtro per la query
     * @param {object} update Aggiornamento da applicare
     * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
-    * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-    * @returns {Promise<object>} Risultato della query
+    * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+    * @returns {Promise<Update | Errore>} Risultato della query
     */
     MongoDriver.prototype.UpdateMolti = function (filtro, update, upsert) {
         if (upsert === void 0) { upsert = false; }
@@ -346,8 +346,8 @@ var MongoDriver = /** @class */ (function () {
      * @param {object} filtro Filtro per la query
      * @param {object} oggetto Oggetto che rimpiazza il record
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Replace | Errore>} Risultato della query
      */
     MongoDriver.prototype.SostituisciUno = function (filtro, oggetto, upsert) {
         if (upsert === void 0) { upsert = false; }
@@ -366,7 +366,7 @@ var MongoDriver = /** @class */ (function () {
     /**
      * @description Elimina il primo record che corrisponde al filtro
      * @param {object} query Filtro per la query
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
     MongoDriver.prototype.EliminaUno = function (query) {
@@ -385,8 +385,8 @@ var MongoDriver = /** @class */ (function () {
     /**
      * @description Elimina tutti i record che corrispondono al filtro
      * @param {object} query Filtro per la query
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Delete | Errore>} Risultato della query
      */
     MongoDriver.prototype.Elimina = function (query) {
         return __awaiter(this, void 0, void 0, function () {
@@ -404,8 +404,8 @@ var MongoDriver = /** @class */ (function () {
     /**
      * @description Restituisce il numero di record che corrispondono al filtro
      * @param {object} query Filtro per la query
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<number | Errore>} Risultato della query
      */
     MongoDriver.prototype.NumeroRecord = function (query) {
         if (query === void 0) { query = {}; }
@@ -425,7 +425,7 @@ var MongoDriver = /** @class */ (function () {
      * @description Restituisce i valori distinti di un campo
      * @param {string} record Campo su cui applicare il distinct
      * @param {object} query Filtro per la query
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<object>} Risultato della query
      */
     MongoDriver.prototype.PrendiDistinct = function (record, query) {
@@ -447,8 +447,8 @@ var MongoDriver = /** @class */ (function () {
      * @param {object} query Filtro per la query
      * @param {string} nuovo Campo che rimpiazza il campo specificato in query
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
-     * @throws {object} Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Replace | Errore>} Risultato della query
      */
     MongoDriver.prototype.Replace = function (query, nuovo, upsert) {
         if (upsert === void 0) { upsert = false; }
@@ -524,6 +524,11 @@ var MongoDriver = /** @class */ (function () {
         }
         console.log.apply(console, __spreadArray([">>> "], elementi, false));
     };
+    /**
+     * @description Controlla se un record è di errore
+     * @param {Errore | T } record Oggetto da controllare
+     * @returns { record is Errore }
+     */
     MongoDriver.prototype.ChkErrore = function (record) {
         return !!record && record.errore !== undefined;
     };
