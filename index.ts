@@ -343,7 +343,7 @@ class MongoDriver{
     }
 
     public ChkErrore<T = any>(record : Errore | T) : record is Errore {
-        return (record as Errore).errore !== undefined;
+        return !!record && (record as Errore).errore !== undefined;
     }
 }
 

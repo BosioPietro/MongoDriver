@@ -525,7 +525,7 @@ var MongoDriver = /** @class */ (function () {
         console.log.apply(console, __spreadArray([">>> "], elementi, false));
     };
     MongoDriver.prototype.ChkErrore = function (record) {
-        return record.errore !== undefined;
+        return !!record && record.errore !== undefined;
     };
     return MongoDriver;
 }());
