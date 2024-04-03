@@ -1,6 +1,6 @@
 {
   "name": "@bosio/mongodriver",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Libreria per facilitare l'uso di MongoDB su Node",
   "main": "index.js",
   "types": "index.d.ts",
