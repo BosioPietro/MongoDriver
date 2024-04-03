@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/BosioPietro/MongoDriver#readme",
   "dependencies": {
+    "express": "^4.19.2",
     "mongodb": "^6.3.0"
   },
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "@types/node": "^20.11.20"
   }
 }

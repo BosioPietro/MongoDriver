@@ -525,11 +525,14 @@ var MongoDriver = /** @class */ (function () {
         console.log.apply(console, __spreadArray([">>> "], elementi, false));
     };
     /**
-     * @description Controlla se un record è di errore
+     * @description Controlla se un record è di errore e, in caso affermativo, può inviare una risposta HTTP
      * @param {Errore | T } record Oggetto da controllare
+     * @param {Response} response Risposta HTTP che manderà l'errore
+     * @param {Record<string, any> | string} messaggio Messaggio di errore da inviare
      * @returns { record is Errore }
      */
-    MongoDriver.prototype.ChkErrore = function (record) {
+    MongoDriver.prototype.Errore = function (record, response, messaggio) {
+        response === null || response === void 0 ? void 0 : response.status(500).send(messaggio || "Errore interno nel server");
         return !!record && record.errore !== undefined;
     };
     return MongoDriver;

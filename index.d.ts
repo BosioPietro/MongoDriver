@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { Response } from "express";
 export type Errore = {
     errore: string;
 };
@@ -197,10 +198,12 @@ declare class MongoDriver {
     private Client;
     private Prompt;
     /**
-     * @description Controlla se un record è di errore
+     * @description Controlla se un record è di errore e, in caso affermativo, può inviare una risposta HTTP
      * @param {Errore | T } record Oggetto da controllare
+     * @param {Response} response Risposta HTTP che manderà l'errore
+     * @param {Record<string, any> | string} messaggio Messaggio di errore da inviare
      * @returns { record is Errore }
      */
-    ChkErrore<T = any>(record: Errore | T): record is Errore;
+    Errore<T = any>(record: Errore | T, response?: Response, messaggio?: Record<string, any> | string): record is Errore;
 }
 export { MongoDriver };

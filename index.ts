@@ -1,5 +1,5 @@
 import {Collection, MongoClient, ObjectId } from "mongodb";
-
+import { Response } from "express";
 
 export type Errore = {
     errore: string
@@ -343,11 +343,14 @@ class MongoDriver{
     }
 
     /**
-     * @description Controlla se un record è di errore
-     * @param {Errore | T } record Oggetto da controllare 
+     * @description Controlla se un record è di errore e, in caso affermativo, può inviare una risposta HTTP
+     * @param {Errore | T } record Oggetto da controllare
+     * @param {Response} response Risposta HTTP che manderà l'errore
+     * @param {Record<string, any> | string} messaggio Messaggio di errore da inviare
      * @returns { record is Errore }
      */
-    public ChkErrore<T = any>(record : Errore | T) : record is Errore {
+    public Errore<T = any>(record : Errore | T, response?: Response, messaggio? : Record<string, any> | string) : record is Errore {
+        response?.status(500).send(messaggio || "Errore interno nel server")
         return !!record && (record as Errore).errore !== undefined;
     }
 }
