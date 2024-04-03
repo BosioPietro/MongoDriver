@@ -350,8 +350,13 @@ class MongoDriver{
      * @returns { record is Errore }
      */
     public Errore<T = any>(record : Errore | T, response?: Response, messaggio? : Record<string, any> | string) : record is Errore {
-        response?.status(500).send(messaggio || "Errore interno nel server")
-        return !!record && (record as Errore).errore !== undefined;
+        if(!!record && (record as Errore).errore !== undefined)
+        {
+            this.Prompt("Errore: " + (record as Errore).errore);
+            response?.status(500).send(messaggio || "Errore interno nel server")
+            return true;
+        }
+        else return false;
     }
 }
 

@@ -532,8 +532,13 @@ var MongoDriver = /** @class */ (function () {
      * @returns { record is Errore }
      */
     MongoDriver.prototype.Errore = function (record, response, messaggio) {
-        response === null || response === void 0 ? void 0 : response.status(500).send(messaggio || "Errore interno nel server");
-        return !!record && record.errore !== undefined;
+        if (!!record && record.errore !== undefined) {
+            this.Prompt("Errore: " + record.errore);
+            response === null || response === void 0 ? void 0 : response.status(500).send(messaggio || "Errore interno nel server");
+            return true;
+        }
+        else
+            return false;
     };
     return MongoDriver;
 }());
