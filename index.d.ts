@@ -3,12 +3,6 @@ import { Response } from "express";
 export type Errore = {
     errore: string;
 };
-type Anyify<T> = {
-    [P in keyof T]: any;
-};
-interface Projection extends Record<string, any> {
-    _id: ObjectId;
-}
 type Insert = {
     acknowledged: boolean;
     insertedId: ObjectId | number;
@@ -95,104 +89,104 @@ declare class MongoDriver {
     get StrConn(): string;
     /**
      * @description Restituisce tutti i risultati della query
-     * @param {object} query Query da eseguire
-     * @param {object} projection Campi da proiettare
-     * @param {object} sort Ordinamento -- {sort : nomeCampo, direction : "asc" | "desc"}
+     * @param {Record<string, any>} query Query da eseguire
+     * @param {Record<string, number>} projection Campi da proiettare
+     * @param {{sort: any, direction? : number | ('asc' | 'desc')}} sort Ordinamento -- {sort : nomeCampo, direction : "asc" | "desc"}
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<Projection & Anyify<T> | Errore>} Risultato della query
+     * @returns {Promise<Record<string, any> | Errore>} Risultato della query
      */
-    PrendiMolti<T extends Record<string, any> = Record<string, any>>(query?: object, projection?: T, sort?: {
+    PrendiMolti(query?: Record<string, any>, projection?: Record<string, number>, sort?: {
         sort: any;
-        direction?: number;
-    }): Promise<Projection & Anyify<T> | Errore>;
+        direction?: number | ('asc' | 'desc');
+    }): Promise<Record<string, any> | Errore>;
     /**
      * @description Restituisce il primo risultato della query
-     * @param {object} query Query da eseguire
-     * @param {object} projection Campi da proiettare
+     * @param {Record<string, any>} query Query da eseguire
+     * @param {Record<string, number>} projection Campi da proiettare
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<Projection & Anyify<T> | Errore>} Risultato della query
+     * @returns {Promise<Projection & Record<string, any> | Errore>} Risultato della query
      */
-    PrendiUno<T extends Record<string, any> = Record<string, any>>(query?: object, projection?: T): Promise<Projection & Anyify<T> | Errore>;
+    PrendiUno(query?: Record<string, any>, projection?: Record<string, number>): Promise<Record<string, any> | Errore>;
     /**
      * @description Restituisce la corrispondenza con l'ID specificato
      * @param {string} id ID del record
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @returns {Promise<Record<string, any>>} Risultato della query
      * @deprecated Usare ID()
      */
-    CercaID(id: string): Promise<object>;
+    CercaID(id: string): Promise<Record<string, any>>;
     /**
      * @description Restituisce la corrispondenza con l'ID specificato
-     * @param {object[]} oggetti Record da inserire
+     * @param {Record<string, any>[]} oggetti Record da inserire
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise< Insert | Errore >} Risultato della query
      */
-    Inserisci(...oggetti: object[]): Promise<Insert | Errore>;
+    Inserisci(...oggetti: Record<string, any>[]): Promise<Insert | Errore>;
     /**
      * @description Aggiorna il primo record che corrisponde al filtro
-     * @param {object} filtro Filtro per la query
-     * @param {object} update Aggiornamento da applicare
+     * @param {Record<string, any>} filtro Filtro per la query
+     * @param {Record<string, any>} update Aggiornamento da applicare
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {PPromise<Update | Errore>} Risultato della query
+     * @returns {Promise<Update | Errore>} Risultato della query
      */
-    UpdateUno(filtro: object, update: object, upsert?: boolean): Promise<Update | Errore>;
+    UpdateUno(filtro: Record<string, any>, update: Record<string, any>, upsert?: boolean): Promise<Update | Errore>;
     /**
     * @description Aggiorna tutti i record che corrispondono al filtro
-    * @param {object} filtro Filtro per la query
-    * @param {object} update Aggiornamento da applicare
+    * @param {Record<string, any>} filtro Filtro per la query
+    * @param {Record<string, any>} update Aggiornamento da applicare
     * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
     * @returns {Promise<Update | Errore>} Risultato della query
     */
-    UpdateMolti(filtro: object, update: object, upsert?: boolean): Promise<Update | Errore>;
+    UpdateMolti(filtro: Record<string, any>, update: Record<string, any>, upsert?: boolean): Promise<Update | Errore>;
     /**
      * @description Aggiorna tutti i record che corrispondono al filtro
-     * @param {object} filtro Filtro per la query
-     * @param {object} oggetto Oggetto che rimpiazza il record
+     * @param {Record<string, any>} filtro Filtro per la query
+     * @param {Record<string, any>} oggetto Oggetto che rimpiazza il record
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<Replace | Errore>} Risultato della query
      */
-    SostituisciUno(filtro: object, oggetto: object, upsert?: boolean): Promise<Replace | Errore>;
+    SostituisciUno(filtro: Record<string, any>, oggetto: Record<string, any>, upsert?: boolean): Promise<Replace | Errore>;
     /**
      * @description Elimina il primo record che corrisponde al filtro
-     * @param {object} query Filtro per la query
-     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
-     */
-    EliminaUno(query: object): Promise<Delete | Errore>;
-    /**
-     * @description Elimina tutti i record che corrispondono al filtro
-     * @param {object} query Filtro per la query
+     * @param {Record<string, any>} query Filtro per la query
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<Delete | Errore>} Risultato della query
      */
-    Elimina(query: object): Promise<Delete | Errore>;
+    EliminaUno(query: Record<string, any>): Promise<Delete | Errore>;
+    /**
+     * @description Elimina tutti i record che corrispondono al filtro
+     * @param {Record<string, any>} query Filtro per la query
+     * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
+     * @returns {Promise<Delete | Errore>} Risultato della query
+     */
+    Elimina(query: Record<string, any>): Promise<Delete | Errore>;
     /**
      * @description Restituisce il numero di record che corrispondono al filtro
-     * @param {object} query Filtro per la query
+     * @param {Record<string, any>} query Filtro per la query
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<number | Errore>} Risultato della query
      */
-    NumeroRecord(query?: object): Promise<number | Errore>;
+    NumeroRecord(query?: Record<string, any>): Promise<number | Errore>;
     /**
      * @description Restituisce i valori distinti di un campo
      * @param {string} record Campo su cui applicare il distinct
-     * @param {object} query Filtro per la query
+     * @param {Record<string, any>} query Filtro per la query
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @returns {Promise<Record<string, any>>} Risultato della query
      */
-    PrendiDistinct(record: string, query?: object): Promise<object>;
+    PrendiDistinct(record: string, query?: Record<string, any>): Promise<Record<string, any>>;
     /**
      * @description Sostuisce il primo record che corrisponde al filtro mantenendo l'ID
-     * @param {object} query Filtro per la query
+     * @param {Record<string, any>} query Filtro per la query
      * @param {string} nuovo Campo che rimpiazza il campo specificato in query
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<Replace | Errore>} Risultato della query
      */
-    Replace(query: object, nuovo: object, upsert?: boolean): Promise<Replace | Errore>;
+    Replace(query: Record<string, any>, nuovo: Record<string, any>, upsert?: boolean): Promise<Replace | Errore>;
     private EseguiQuery;
     private Connetti;
     private Client;

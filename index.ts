@@ -5,8 +5,6 @@ export type Errore = {
     errore: string
 }
 
-type Anyify<T> = { [P in keyof T]: any };
-
 interface Projection extends Record<string, any> {
     _id: ObjectId;
 }
@@ -157,49 +155,49 @@ class MongoDriver{
 
     /**
      * @description Restituisce tutti i risultati della query
-     * @param {object} query Query da eseguire
-     * @param {object} projection Campi da proiettare
-     * @param {object} sort Ordinamento -- {sort : nomeCampo, direction : "asc" | "desc"}
+     * @param {Record<string, any>} query Query da eseguire
+     * @param {Record<string, number>} projection Campi da proiettare
+     * @param {{sort: any, direction? : number | ('asc' | 'desc')}} sort Ordinamento -- {sort : nomeCampo, direction : "asc" | "desc"}
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<Projection & Anyify<T> | Errore>} Risultato della query
+     * @returns {Promise<Record<string, any> | Errore>} Risultato della query
      */
-    public async PrendiMolti<T extends Record<string, any> = Record<string, any>>(query: object = {}, projection: T = {} as T, sort: {sort : any, direction? : number} = {sort: {}}) : Promise<Projection & Anyify<T> | Errore> {        
+    public async PrendiMolti(query: Record<string, any> = {}, projection: Record<string, number> = {}, sort: {sort : any, direction? : number | ('asc' | 'desc')} = {sort: {}}) : Promise<Record<string, any> | Errore> {        
         const {client, collection} = await this.Connetti();
     
-        return this.EseguiQuery<Projection & T>(async () => collection.find(query).project(projection as any).sort(Object.values(sort)).toArray(), client);
+        return this.EseguiQuery(async () => collection.find(query).project(projection as any).sort(Object.values(sort)).toArray(), client);
     } 
 
     /**
      * @description Restituisce il primo risultato della query
-     * @param {object} query Query da eseguire
-     * @param {object} projection Campi da proiettare
+     * @param {Record<string, any>} query Query da eseguire
+     * @param {Record<string, number>} projection Campi da proiettare
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<Projection & Anyify<T> | Errore>} Risultato della query
+     * @returns {Promise<Projection & Record<string, any> | Errore>} Risultato della query
      */
-    public async PrendiUno<T extends Record<string, any> = Record<string, any>>(query: object = {}, projection: T = {} as T) : Promise<Projection & Anyify<T> | Errore> {
+    public async PrendiUno(query: Record<string, any> = {}, projection: Record<string, number> = {}) : Promise<Record<string, any> | Errore> {
         const {client, collection} = await this.Connetti();
     
-        return this.EseguiQuery<Projection & T>(async () => collection.findOne(query, { projection : projection as any }), client);
+        return this.EseguiQuery(async () => collection.findOne(query, { projection : projection as any }), client);
     }
 
     /**
      * @description Restituisce la corrispondenza con l'ID specificato
      * @param {string} id ID del record
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @returns {Promise<Record<string, any>>} Risultato della query
      * @deprecated Usare ID()
      */
-    public CercaID(id : string) : Promise<object>{
+    public CercaID(id : string) : Promise<Record<string, any>>{
         return this.PrendiUno({"_id" : new ObjectId(id)});
     }
 
     /**
      * @description Restituisce la corrispondenza con l'ID specificato
-     * @param {object[]} oggetti Record da inserire
+     * @param {Record<string, any>[]} oggetti Record da inserire
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise< Insert | Errore >} Risultato della query
      */
-    public async Inserisci(...oggetti: object[]) : Promise< Insert | Errore > {
+    public async Inserisci(...oggetti: Record<string, any>[]) : Promise< Insert | Errore > {
         const {client, collection} = await this.Connetti();
         const rq = oggetti.length == 1 ? collection.insertOne(oggetti[0]) : collection.insertMany(oggetti);
 
@@ -208,13 +206,13 @@ class MongoDriver{
 
     /** 
      * @description Aggiorna il primo record che corrisponde al filtro
-     * @param {object} filtro Filtro per la query
-     * @param {object} update Aggiornamento da applicare
+     * @param {Record<string, any>} filtro Filtro per la query
+     * @param {Record<string, any>} update Aggiornamento da applicare
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {PPromise<Update | Errore>} Risultato della query
+     * @returns {Promise<Update | Errore>} Risultato della query
      */
-    public async UpdateUno(filtro : object, update : object, upsert : boolean = false) : Promise<Update | Errore> {
+    public async UpdateUno(filtro : Record<string, any>, update : Record<string, any>, upsert : boolean = false) : Promise<Update | Errore> {
         const {client, collection} = await this.Connetti(); 
 
         return this.EseguiQuery<Update>(() => collection.updateOne(filtro, update, { upsert }), client);
@@ -222,13 +220,13 @@ class MongoDriver{
 
      /**
      * @description Aggiorna tutti i record che corrispondono al filtro
-     * @param {object} filtro Filtro per la query
-     * @param {object} update Aggiornamento da applicare
+     * @param {Record<string, any>} filtro Filtro per la query
+     * @param {Record<string, any>} update Aggiornamento da applicare
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<Update | Errore>} Risultato della query
      */
-    public async UpdateMolti(filtro : object, update : object, upsert : boolean = false) : Promise<Update | Errore> {
+    public async UpdateMolti(filtro : Record<string, any>, update : Record<string, any>, upsert : boolean = false) : Promise<Update | Errore> {
         const {client, collection} = await this.Connetti(); 
 
         return this.EseguiQuery<Update>(() => collection.updateMany(filtro, update, { upsert }), client);
@@ -236,13 +234,13 @@ class MongoDriver{
 
     /**
      * @description Aggiorna tutti i record che corrispondono al filtro
-     * @param {object} filtro Filtro per la query
-     * @param {object} oggetto Oggetto che rimpiazza il record
+     * @param {Record<string, any>} filtro Filtro per la query
+     * @param {Record<string, any>} oggetto Oggetto che rimpiazza il record
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<Replace | Errore>} Risultato della query
      */
-    public async SostituisciUno(filtro: object, oggetto: object, upsert: boolean = false) : Promise<Replace | Errore> {
+    public async SostituisciUno(filtro: Record<string, any>, oggetto: Record<string, any>, upsert: boolean = false) : Promise<Replace | Errore> {
         const {client, collection} = await this.Connetti(); 
 
         return this.EseguiQuery<Replace>(() => collection.replaceOne(filtro, oggetto, { upsert }), client);
@@ -250,11 +248,11 @@ class MongoDriver{
 
     /**
      * @description Elimina il primo record che corrisponde al filtro
-     * @param {object} query Filtro per la query
+     * @param {Record<string, any>} query Filtro per la query
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @returns {Promise<Delete | Errore>} Risultato della query
      */
-    public async EliminaUno(query : object) : Promise<Delete | Errore> {
+    public async EliminaUno(query : Record<string, any>) : Promise<Delete | Errore> {
         const {client, collection} = await this.Connetti(); 
 
         return this.EseguiQuery<Delete>(() => collection.deleteOne(query), client);
@@ -262,11 +260,11 @@ class MongoDriver{
 
     /**
      * @description Elimina tutti i record che corrispondono al filtro
-     * @param {object} query Filtro per la query
+     * @param {Record<string, any>} query Filtro per la query
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<Delete | Errore>} Risultato della query
      */
-    public async Elimina(query : object) : Promise< Delete | Errore> {
+    public async Elimina(query : Record<string, any>) : Promise< Delete | Errore> {
         const {client, collection} = await this.Connetti(); 
 
         return this.EseguiQuery<Delete>(() => collection.deleteMany(query), client);
@@ -274,11 +272,11 @@ class MongoDriver{
 
     /**
      * @description Restituisce il numero di record che corrispondono al filtro
-     * @param {object} query Filtro per la query
+     * @param {Record<string, any>} query Filtro per la query
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<number | Errore>} Risultato della query
      */
-    public async NumeroRecord(query : object = {}) : Promise<number | Errore> {
+    public async NumeroRecord(query : Record<string, any> = {}) : Promise<number | Errore> {
         const {client, collection} = await this.Connetti(); 
 
         return this.EseguiQuery<number>(() => collection.countDocuments(query), client);
@@ -287,11 +285,11 @@ class MongoDriver{
     /**
      * @description Restituisce i valori distinti di un campo
      * @param {string} record Campo su cui applicare il distinct
-     * @param {object} query Filtro per la query
+     * @param {Record<string, any>} query Filtro per la query
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<object>} Risultato della query
+     * @returns {Promise<Record<string, any>>} Risultato della query
      */
-    public async PrendiDistinct(record : string, query : object = {}) : Promise<object> {
+    public async PrendiDistinct(record : string, query : Record<string, any> = {}) : Promise<Record<string, any>> {
         const {client, collection} = await this.Connetti(); 
 
         return this.EseguiQuery(() => collection.distinct(record, query), client);
@@ -299,19 +297,19 @@ class MongoDriver{
 
     /**
      * @description Sostuisce il primo record che corrisponde al filtro mantenendo l'ID
-     * @param {object} query Filtro per la query
+     * @param {Record<string, any>} query Filtro per la query
      * @param {string} nuovo Campo che rimpiazza il campo specificato in query
      * @param {boolean} upsert Se true, crea un nuovo record se non trova corrispondenze
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
      * @returns {Promise<Replace | Errore>} Risultato della query
      */
-    public async Replace(query : object, nuovo : object, upsert : boolean = false) : Promise<Replace | Errore> {
+    public async Replace(query : Record<string, any>, nuovo : Record<string, any>, upsert : boolean = false) : Promise<Replace | Errore> {
         const {client, collection} = await this.Connetti(); 
 
         return this.EseguiQuery<Replace>(() => collection.replaceOne(query, nuovo, { upsert }), client);
     }
     
-    private async EseguiQuery<T = object>(funzione_query : Function, client : MongoClient) : Promise<T | Errore>{
+    private async EseguiQuery<T = Record<string, any>>(funzione_query : Function, client : MongoClient) : Promise<T | Errore>{
         try
         {
             const data = await funzione_query();
