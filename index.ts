@@ -91,6 +91,8 @@ class MongoDriver{
      * @throws {Error} Se la collezione non esiste
      */
     public async SettaCollezione(collezione : string) {
+        if(this.collezione == collezione) return;
+
         const client = await this.Client();
         const db = client.db(this.database);
         const collezioni = await db.listCollections().toArray();
@@ -112,7 +114,7 @@ class MongoDriver{
     public async Collezioni() : Promise<{collezioni? : string[], errore? : string}> {
         try
         {
-            const {client} = await this.Connetti();
+            const { client } = await this.Connetti();
             const db = client.db(this.database);
             const collezioni = await db.listCollections().toArray();
 
@@ -135,6 +137,8 @@ class MongoDriver{
      * @throws {Error} Se il database non esiste
      */
     public async SettaDatabase(nomeDatabase : string){
+        if(this.database == nomeDatabase) return;
+
         const client = await this.Client();
         const dbList = await client.db().admin().listDatabases();
         client.close();

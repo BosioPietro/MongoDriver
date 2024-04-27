@@ -119,7 +119,10 @@ var MongoDriver = /** @class */ (function () {
             var client, db, collezioni;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.Client()];
+                    case 0:
+                        if (this.collezione == collezione)
+                            return [2 /*return*/];
+                        return [4 /*yield*/, this.Client()];
                     case 1:
                         client = _a.sent();
                         db = client.db(this.database);
@@ -185,7 +188,10 @@ var MongoDriver = /** @class */ (function () {
             var client, dbList;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.Client()];
+                    case 0:
+                        if (this.database == nomeDatabase)
+                            return [2 /*return*/];
+                        return [4 /*yield*/, this.Client()];
                     case 1:
                         client = _a.sent();
                         return [4 /*yield*/, client.db().admin().listDatabases()];
