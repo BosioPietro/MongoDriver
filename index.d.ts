@@ -31,6 +31,7 @@ type Delete = {
  * @exports MongoDriver
  */
 declare class MongoDriver {
+    private static client;
     private constructor();
     /**
      * @description Crea un oggetto ID data una string

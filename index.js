@@ -90,6 +90,7 @@ var MongoDriver = /** @class */ (function () {
                         _a.sent();
                         if (collezione)
                             database.SettaCollezione(collezione);
+                        this.client = new mongodb_1.MongoClient(strConn);
                         database.Prompt("Database " + database.database + " e collezione " + database.collezione + " impostati");
                         return [2 /*return*/, database];
                 }
@@ -483,15 +484,12 @@ var MongoDriver = /** @class */ (function () {
     };
     MongoDriver.prototype.Client = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var client;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        client = new mongodb_1.MongoClient(this.strConn);
-                        return [4 /*yield*/, client.connect()];
+                    case 0: return [4 /*yield*/, MongoDriver.client.connect()];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, client];
+                        return [2 /*return*/, MongoDriver.client];
                 }
             });
         });
