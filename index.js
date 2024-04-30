@@ -111,12 +111,7 @@ var MongoDriver = /** @class */ (function () {
      * @throws {Error} Se la collezione non esiste
      */
     MongoDriver.prototype.SettaCollezione = function (collezione) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                this.collezione = collezione;
-                return [2 /*return*/];
-            });
-        });
+        this.collezione = collezione;
     };
     /**
      * @description Ritorna la lista delle collezioni nel database

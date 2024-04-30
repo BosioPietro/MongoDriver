@@ -61,7 +61,7 @@ declare class MongoDriver {
      * @param {string} collezione Nome della collezione
      * @throws {Error} Se la collezione non esiste
      */
-    SettaCollezione(collezione: string): Promise<void>;
+    SettaCollezione(collezione: string): void;
     /**
      * @description Ritorna la lista delle collezioni nel database
      * @throws Ritorna un oggetto col campo "errore" contente il messaggio

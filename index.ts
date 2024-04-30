@@ -90,7 +90,7 @@ class MongoDriver{
      * @param {string} collezione Nome della collezione
      * @throws {Error} Se la collezione non esiste
      */
-    public async SettaCollezione(collezione : string) {
+    public SettaCollezione(collezione : string) {
         this.collezione = collezione;
     }
 
