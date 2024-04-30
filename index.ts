@@ -69,7 +69,7 @@ class MongoDriver{
     public static async CreaDatabase(strConn : string, nomeDatabase : string, collezione? : string) : Promise<MongoDriver> {
         const database = new MongoDriver(strConn);
         await database.SettaDatabase(nomeDatabase);
-        if(collezione) await database.SettaCollezione(collezione);
+        if(collezione) database.SettaCollezione(collezione);
 
         database.Prompt("Database " + database.database + " e collezione " + database.collezione + " impostati")
         return database;
@@ -91,18 +91,7 @@ class MongoDriver{
      * @throws {Error} Se la collezione non esiste
      */
     public async SettaCollezione(collezione : string) {
-        if(this.collezione == collezione) return;
-
-        const client = await this.Client();
-        const db = client.db(this.database);
-        const collezioni = await db.listCollections().toArray();
-        client.close();
-
-        if(collezioni.some(c => c.name == collezione))
-        {
-            this.collezione = collezione;
-        }
-        else throw new Error("La collezione \"" + collezione + "\" non esiste");
+        this.collezione = collezione;
     }
 
     /**

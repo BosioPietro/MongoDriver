@@ -88,12 +88,8 @@ var MongoDriver = /** @class */ (function () {
                         return [4 /*yield*/, database.SettaDatabase(nomeDatabase)];
                     case 1:
                         _a.sent();
-                        if (!collezione) return [3 /*break*/, 3];
-                        return [4 /*yield*/, database.SettaCollezione(collezione)];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
-                    case 3:
+                        if (collezione)
+                            database.SettaCollezione(collezione);
                         database.Prompt("Database " + database.database + " e collezione " + database.collezione + " impostati");
                         return [2 /*return*/, database];
                 }
@@ -116,27 +112,9 @@ var MongoDriver = /** @class */ (function () {
      */
     MongoDriver.prototype.SettaCollezione = function (collezione) {
         return __awaiter(this, void 0, void 0, function () {
-            var client, db, collezioni;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (this.collezione == collezione)
-                            return [2 /*return*/];
-                        return [4 /*yield*/, this.Client()];
-                    case 1:
-                        client = _a.sent();
-                        db = client.db(this.database);
-                        return [4 /*yield*/, db.listCollections().toArray()];
-                    case 2:
-                        collezioni = _a.sent();
-                        client.close();
-                        if (collezioni.some(function (c) { return c.name == collezione; })) {
-                            this.collezione = collezione;
-                        }
-                        else
-                            throw new Error("La collezione \"" + collezione + "\" non esiste");
-                        return [2 /*return*/];
-                }
+                this.collezione = collezione;
+                return [2 /*return*/];
             });
         });
     };
