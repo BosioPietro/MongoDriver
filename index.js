@@ -53,11 +53,16 @@ var mongodb_1 = require("mongodb");
  * @exports MongoDriver
  */
 var MongoDriver = /** @class */ (function () {
-    function MongoDriver(strConn) {
+    function MongoDriver(strConn, nomeDatabase, collezione) {
         this.database = "";
         this.collezione = "";
         this.strConn = strConn;
         this.Prompt("Driver creato con stringa di connessione " + strConn);
+        this.SettaDatabase(nomeDatabase);
+        if (collezione)
+            this.SettaCollezione(collezione);
+        this.client = new mongodb_1.MongoClient(strConn);
+        this.Prompt("Database " + this.database + " e collezione " + this.collezione + " impostati");
     }
     /**
      * @description Crea un oggetto ID data una string
@@ -68,34 +73,6 @@ var MongoDriver = /** @class */ (function () {
         if (!mongodb_1.ObjectId.isValid(id))
             throw new Error("ID non valido");
         return new mongodb_1.ObjectId(id);
-    };
-    /**
-     * @description Crea un'istanza di MongoDriver
-     * @param {string} strConn Stringa di connessione al DB
-     * @param {string} nomeDatabase Nome del database
-     * @param {string} collezione Nome della collezione
-     * @throws {Error} Se la stringa di connessione non è valida
-     * @throws {Error} Se il database non esiste
-     * @throws {Error} Se la collezione non esiste
-     */
-    MongoDriver.CreaDatabase = function (strConn, nomeDatabase, collezione) {
-        return __awaiter(this, void 0, void 0, function () {
-            var database;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        database = new MongoDriver(strConn);
-                        return [4 /*yield*/, database.SettaDatabase(nomeDatabase)];
-                    case 1:
-                        _a.sent();
-                        if (collezione)
-                            database.SettaCollezione(collezione);
-                        this.client = new mongodb_1.MongoClient(strConn);
-                        database.Prompt("Database " + database.database + " e collezione " + database.collezione + " impostati");
-                        return [2 /*return*/, database];
-                }
-            });
-        });
     };
     Object.defineProperty(MongoDriver.prototype, "Collezione", {
         /**
@@ -158,29 +135,7 @@ var MongoDriver = /** @class */ (function () {
      * @throws {Error} Se il database non esiste
      */
     MongoDriver.prototype.SettaDatabase = function (nomeDatabase) {
-        return __awaiter(this, void 0, void 0, function () {
-            var client, dbList;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (this.database == nomeDatabase)
-                            return [2 /*return*/];
-                        return [4 /*yield*/, this.Client()];
-                    case 1:
-                        client = _a.sent();
-                        return [4 /*yield*/, client.db().admin().listDatabases()];
-                    case 2:
-                        dbList = _a.sent();
-                        client.close();
-                        if (dbList.databases.some(function (db) { return db.name == nomeDatabase; })) {
-                            this.database = nomeDatabase;
-                        }
-                        else
-                            throw new Error("Il database \"" + nomeDatabase + "\" non esiste");
-                        return [2 /*return*/];
-                }
-            });
-        });
+        this.database = nomeDatabase;
     };
     Object.defineProperty(MongoDriver.prototype, "StrConn", {
         /**
@@ -486,10 +441,10 @@ var MongoDriver = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, MongoDriver.client.connect()];
+                    case 0: return [4 /*yield*/, this.client.connect()];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, MongoDriver.client];
+                        return [2 /*return*/, this.client];
                 }
             });
         });

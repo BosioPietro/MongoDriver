@@ -31,7 +31,7 @@ type Delete = {
  * @exports MongoDriver
  */
 declare class MongoDriver {
-    private static client;
+    private client;
     private constructor();
     /**
      * @description Crea un oggetto ID data una string
@@ -39,16 +39,6 @@ declare class MongoDriver {
      * @returns {ObjectId} Oggetto ObjectId corrispondente
      */
     ID(id: string): ObjectId;
-    /**
-     * @description Crea un'istanza di MongoDriver
-     * @param {string} strConn Stringa di connessione al DB
-     * @param {string} nomeDatabase Nome del database
-     * @param {string} collezione Nome della collezione
-     * @throws {Error} Se la stringa di connessione non è valida
-     * @throws {Error} Se il database non esiste
-     * @throws {Error} Se la collezione non esiste
-     */
-    static CreaDatabase(strConn: string, nomeDatabase: string, collezione?: string): Promise<MongoDriver>;
     private strConn;
     private database;
     private collezione;
@@ -82,7 +72,7 @@ declare class MongoDriver {
      * @param {string} nomeDatabase Nome del database
      * @throws {Error} Se il database non esiste
      */
-    SettaDatabase(nomeDatabase: string): Promise<void>;
+    SettaDatabase(nomeDatabase: string): void;
     /**
      * @description Restituisce la stringa di connessione corrente
      * @returns {string} Stringa di connessione

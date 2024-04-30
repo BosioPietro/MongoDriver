@@ -44,11 +44,18 @@ type Delete = {
  */
 class MongoDriver{
     
-    private static client: MongoClient;
+    private client!: MongoClient;
 
-    private constructor(strConn : string){
+    private constructor(strConn : string, nomeDatabase : string, collezione? : string){
         this.strConn = strConn;
         this.Prompt("Driver creato con stringa di connessione " + strConn)
+
+        this.SettaDatabase(nomeDatabase);
+        if(collezione) this.SettaCollezione(collezione);
+
+        this.client = new MongoClient(strConn)
+
+        this.Prompt("Database " + this.database + " e collezione " + this.collezione + " impostati")
     }
     /**
      * @description Crea un oggetto ID data una string
@@ -58,26 +65,6 @@ class MongoDriver{
     public ID(id : string) : ObjectId{
         if(!ObjectId.isValid(id)) throw new Error("ID non valido");
         return new ObjectId(id)
-    }
-
-    /**
-     * @description Crea un'istanza di MongoDriver
-     * @param {string} strConn Stringa di connessione al DB
-     * @param {string} nomeDatabase Nome del database
-     * @param {string} collezione Nome della collezione
-     * @throws {Error} Se la stringa di connessione non è valida
-     * @throws {Error} Se il database non esiste
-     * @throws {Error} Se la collezione non esiste
-     */
-    public static async CreaDatabase(strConn : string, nomeDatabase : string, collezione? : string) : Promise<MongoDriver> {
-        const database = new MongoDriver(strConn);
-        await database.SettaDatabase(nomeDatabase);
-        if(collezione) database.SettaCollezione(collezione);
-
-        this.client = new MongoClient(strConn);
-
-        database.Prompt("Database " + database.database + " e collezione " + database.collezione + " impostati")
-        return database;
     }
 
     private strConn : string;
@@ -130,18 +117,8 @@ class MongoDriver{
      * @param {string} nomeDatabase Nome del database
      * @throws {Error} Se il database non esiste
      */
-    public async SettaDatabase(nomeDatabase : string){
-        if(this.database == nomeDatabase) return;
-
-        const client = await this.Client();
-        const dbList = await client.db().admin().listDatabases();
-        client.close();
-
-        if(dbList.databases.some(db => db.name == nomeDatabase))
-        {
-            this.database = nomeDatabase;
-        }
-        else throw new Error("Il database \"" + nomeDatabase + "\" non esiste");
+    public SettaDatabase(nomeDatabase : string){
+        this.database = nomeDatabase;
     } 
 
     /**
@@ -329,8 +306,8 @@ class MongoDriver{
     }
 
     private async Client() : Promise<MongoClient>{
-        await MongoDriver.client.connect();
-        return MongoDriver.client;
+        await this.client.connect();
+        return this.client;
     }
 
     private Prompt(...elementi : any[]) : void {
