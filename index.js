@@ -61,7 +61,6 @@ var MongoDriver = /** @class */ (function () {
         this.SettaDatabase(nomeDatabase);
         if (collezione)
             this.SettaCollezione(collezione);
-        this.client = new mongodb_1.MongoClient(strConn);
         this.Prompt("Database " + this.database + " e collezione " + this.collezione + " impostati");
     }
     /**
@@ -439,12 +438,15 @@ var MongoDriver = /** @class */ (function () {
     };
     MongoDriver.prototype.Client = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var client;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.client.connect()];
+                    case 0:
+                        client = new mongodb_1.MongoClient(this.strConn);
+                        return [4 /*yield*/, client.connect()];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, this.client];
+                        return [2 /*return*/, client];
                 }
             });
         });

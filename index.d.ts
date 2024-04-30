@@ -31,8 +31,7 @@ type Delete = {
  * @exports MongoDriver
  */
 declare class MongoDriver {
-    private client;
-    private constructor();
+    constructor(strConn: string, nomeDatabase: string, collezione?: string);
     /**
      * @description Crea un oggetto ID data una string
      * @param {string} id Stringa da convertire

@@ -44,16 +44,13 @@ type Delete = {
  */
 class MongoDriver{
     
-    private client!: MongoClient;
 
-    private constructor(strConn : string, nomeDatabase : string, collezione? : string){
+    constructor(strConn : string, nomeDatabase : string, collezione? : string){
         this.strConn = strConn;
         this.Prompt("Driver creato con stringa di connessione " + strConn)
 
         this.SettaDatabase(nomeDatabase);
         if(collezione) this.SettaCollezione(collezione);
-
-        this.client = new MongoClient(strConn)
 
         this.Prompt("Database " + this.database + " e collezione " + this.collezione + " impostati")
     }
@@ -306,8 +303,9 @@ class MongoDriver{
     }
 
     private async Client() : Promise<MongoClient>{
-        await this.client.connect();
-        return this.client;
+        const client = new MongoClient(this.strConn);
+        await client.connect();
+        return client;
     }
 
     private Prompt(...elementi : any[]) : void {
