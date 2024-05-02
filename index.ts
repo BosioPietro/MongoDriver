@@ -47,12 +47,9 @@ class MongoDriver{
 
     constructor(strConn : string, nomeDatabase : string, collezione? : string){
         this.strConn = strConn;
-        this.Prompt("Driver creato con stringa di connessione " + strConn)
 
         this.SettaDatabase(nomeDatabase);
         if(collezione) this.SettaCollezione(collezione);
-
-        this.Prompt("Database " + this.database + " e collezione " + this.collezione + " impostati")
     }
     /**
      * @description Crea un oggetto ID data una string
@@ -131,9 +128,9 @@ class MongoDriver{
      * @param {Record<string, number>} projection Campi da proiettare
      * @param {{sort: any, direction? : number | ('asc' | 'desc')}} sort Ordinamento -- {sort : nomeCampo, direction : "asc" | "desc"}
      * @throws { Errore } Restituisce un oggetto con la chiave "errore" e il messaggio di errore
-     * @returns {Promise<Record<string, any> | Errore>} Risultato della query
+     * @returns {Promise<Record<string, any>[] | Errore>} Risultato della query
      */
-    public async PrendiMolti(query: Record<string, any> = {}, projection: Record<string, number> = {}, sort: {sort : any, direction? : number | ('asc' | 'desc')} = {sort: {}}) : Promise<Record<string, any> | Errore> {        
+    public async PrendiMolti(query: Record<string, any> = {}, projection: Record<string, number> = {}, sort: {sort : any, direction? : number | ('asc' | 'desc')} = {sort: {}}) : Promise<Record<string, any>[] | Errore> {        
         const {client, collection} = await this.Connetti();
     
         return this.EseguiQuery(async () => collection.find(query).project(projection as any).sort(Object.values(sort)).toArray(), client);

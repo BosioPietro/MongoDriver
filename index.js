@@ -57,11 +57,9 @@ var MongoDriver = /** @class */ (function () {
         this.database = "";
         this.collezione = "";
         this.strConn = strConn;
-        this.Prompt("Driver creato con stringa di connessione " + strConn);
         this.SettaDatabase(nomeDatabase);
         if (collezione)
             this.SettaCollezione(collezione);
-        this.Prompt("Database " + this.database + " e collezione " + this.collezione + " impostati");
     }
     /**
      * @description Crea un oggetto ID data una string
